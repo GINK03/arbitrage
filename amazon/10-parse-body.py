@@ -17,17 +17,21 @@ def _map(arg):
     html = ( gzip.decompress(open(name,'rb').read()).decode() )
     soup = bs4.BeautifulSoup(html)
     
-    url = soup.find('meta', property='og:url')
+    url = soup.find('link', {'rel':'canonical'})
     mkeyword = soup.find('meta', {'name':'keywords'})
     descript = soup.find('meta', {'name':'description'})
+    print(url, mkeyword, descript)
     if url is None:
+      name.unlink()
       continue
-    url = url.get('content')
+    url = url.get('href')
     if mkeyword is None or descript is None:
+      name.unlink()
       continue
     mkeyword = mkeyword.get('content')
     descript = descript.get('content')
-    if re.search(r'item.rakuten.co.jp', url) is None:
+    if re.search(r'/dp/B', url) is None:
+      name.unlink()
       continue
 
     [ s.extract() for s in soup('script') ]
@@ -42,7 +46,7 @@ def _map(arg):
     json.dump(obj, fp=open(f'blobs/{ha}', 'w'))
 
 args = {}
-for index, name in enumerate(Path('../../../scraping-designs/rakuten-scrape/htmls').glob('*')):
+for index, name in enumerate(Path('../../../scraping-designs/amazon-scrape/htmls').glob('*')):
   key = index%16
   if args.get(key) is None:
     args[key] = []
