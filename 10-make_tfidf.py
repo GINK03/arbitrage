@@ -13,6 +13,8 @@ import pickle, gzip
 import sys
 
 import math
+
+import re
 if '--blobs' in sys.argv:
   data = []
   m = MeCab.Tagger('-Owakati')
@@ -50,8 +52,10 @@ if '--term_doc' in sys.argv:
   for term in list(term_doc.keys()):
     if term_doc[term] <= 3:
       del term_doc[term]
+      continue
     if re.search(r'\d{1,}', term) is not None:
       del term_doc[term]
+      continue
   json.dump(term_doc, fp=open('term_doc.json', 'w'), indent=2, ensure_ascii=False)
 
 if '--byterm_index' in sys.argv:
