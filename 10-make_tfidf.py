@@ -45,6 +45,13 @@ if '--term_doc' in sys.argv:
         if term_doc.get(term) is None:
           term_doc[term] = 0
         term_doc[term] += 1
+
+  # term_docのレアリティが高い言葉（文字化けのユニークな何かなど）を削る
+  for term in list(term_doc.keys()):
+    if term_doc[term] <= 3:
+      del term_doc[term]
+    if re.search(r'\d{1,}', term) is not None:
+      del term_doc[term]
   json.dump(term_doc, fp=open('term_doc.json', 'w'), indent=2, ensure_ascii=False)
 
 if '--byterm_index' in sys.argv:
