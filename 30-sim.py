@@ -9,14 +9,16 @@ import sys
 import math
 import hashlib
 import json
+
+import plyvel
+
+db = plyvel.DB('feats.ldb', create_if_missing=True) 
 if '--memory' in sys.argv:
-  url_data = {} 
   for name in Path('tfidf/').glob('*'):
     obj = pickle.loads(gzip.decompress(name.open('rb').read()))
     for url, data in obj.items():
-      url_data[url] = data
-
-  pickle.dump(url_data, open('onmemory.pkl','wb'))
+      db.put(bytes(url, 'utf8'), pickle.dumps(data))
+      print(url)
 
 if '--sim' in sys.argv:
   def sim(arg):
