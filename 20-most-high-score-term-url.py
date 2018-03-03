@@ -3,7 +3,7 @@ import gzip
 
 from pathlib import Path
 
-for name in Path('./tfidf/').glob('*'):
+for name in Path('tfidf/').glob('*'):
   url_data = pickle.loads(gzip.decompress(name.open('rb').read()))
 
   for url, data in url_data.items():
