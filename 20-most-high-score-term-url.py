@@ -10,7 +10,9 @@ for name in Path('tfidf/').glob('*'):
     print(url)
 
     term_score = {}
-    for entory in data:
+    title, keywords, description, body = data
+
+    for entory in [title, keywords, description]:
       for term, score in entory.items():
         if term_score.get(term) is None:
           term_score[term] = 0
