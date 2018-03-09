@@ -14,7 +14,7 @@ import plyvel
 
 import concurrent.futures
 
-
+import pickle
 if '--sim' in sys.argv:
 
   def sim(arg):
@@ -56,8 +56,9 @@ if '--sim' in sys.argv:
       key_scores = dict(key_scores)
       
       ha = hashlib.sha256(bytes(str(path), 'utf8')).hexdigest()
-      json.dump(key_score, fp=open(f'similarity/{ha}', 'w'), indent=2 )
+      print(key_scores)
+      pickle.dump(key_scores, open(f'similarity/{ha}', 'wb') )
   args = [path for path in Path('./tfidf').glob('*')]
-  #_map(args[-1])
+  _map(args[-1])
   with concurrent.futures.ProcessPoolExecutor(max_workers=16) as exe:
     exe.map(_map, args)
